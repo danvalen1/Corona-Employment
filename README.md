@@ -11,7 +11,7 @@
 ├── src                                 <- Contains images, data, and modules
 │   ├── images                          <- Images created and downloaded
 │   ├── data                            <- Source data used
-│   └── customModules                   <- .py files
+│   └── modules                   <- .py files
 ├── images                              <- Both sourced externally and generated from code
 ├── notebooks                           <- Noteboooks used to build Walkthrough
 └── data                                <- kc_house_data.csv
