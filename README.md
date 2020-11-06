@@ -16,3 +16,4 @@
 ├── notebooks                           <- Noteboooks used to build Walkthrough
 └── data                                <- kc_house_data.csv
 ```
+## Business Problem
