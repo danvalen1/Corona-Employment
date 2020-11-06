@@ -1,6 +1,6 @@
 # Phase3-Proj
 
-**Authors**: , Dan Valenzuela
+**Authors**: Tim Hintz, Dan Valenzuela
 
 ## Repository Structure
 
