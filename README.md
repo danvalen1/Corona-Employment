@@ -9,9 +9,9 @@
 ├── Project_Walkthrough.ipynb           <- Narrative documentation of analysis in Jupyter notebook
 ├── Phase3-Proj_Presentation.pdf <- PDF version of project presentation
 ├── src                                 <- Contains images, data, and modules
-|   ├── images                          <- Images created and downloaded
-|   ├── data                            <- Source data used
-|   └── customModules                   <- .py files
+│   ├── images                          <- Images created and downloaded
+│   ├── data                            <- Source data used
+│   └── customModules                   <- .py files
 ├── images                              <- Both sourced externally and generated from code
 ├── notebooks                           <- Noteboooks used to build Walkthrough
 └── data                                <- kc_house_data.csv
