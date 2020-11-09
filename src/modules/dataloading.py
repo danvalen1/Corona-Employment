@@ -14,7 +14,9 @@ archive_age_limit = 30
 
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36'
 
-def CPS_raw(targetdir, list_of_mmmyyyy, series):
+feature_list = []
+
+def CPS_raw(targetdir, list_of_mmmyyyy, series = feature_list):
     """Retrieves monthly CPS data from 1998 onwards.
     
             Parameters:
@@ -206,8 +208,8 @@ def CPS_vars(targetdir, mmmyyyy, series):
             ## Account for certain data dict nits
             if loc[0] == loc[1]:
                 dd_sel_var.append((i[0], 
-                                   loc[0], 
-                                   loc[1]+2))
+                                   loc[0]-1, 
+                                   loc[1]+0))
             else:
                 dd_sel_var.append((i[0], 
                                    loc[0]+(adj_below_2003)+(adj_above_2002), 
