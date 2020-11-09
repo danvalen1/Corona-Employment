@@ -5,7 +5,7 @@
 
 **Authors**: [Tim Hintz](mailto:tjhintz@gmail.com), [Dan Valenzuela](mailto:danvalen1@gmail.com)
 
-![img](./images/unemployment.jpg)
+![img](./images/employment.jpg)
 
 ## Overview
 
