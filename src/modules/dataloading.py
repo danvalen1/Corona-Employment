@@ -18,14 +18,13 @@ user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36
 def employed_adults_csv(csv_targetdir, data_targetdir, list_of_mmmyyyy):
     """Creates a CSV of employed adults that are present in 2 months of data.
             Parameters:
-                cstargetdir (str): String indicating where data should be saved.
+                csv_targetdir (str): String indicating where csv should be saved.
+                data_targetdir (str): String indicating where data should be saved.
                 list_of_mmmyyyy (list of str): List of month-years of data 
-                to be retrieved (e.g., sep2020)
-                series (list of str): List of variables of interest
+                to be retrieved (e.g., sep2020) (only 2).
         
             Returns:
-                df (pandas data frame): Dataframe of all data listed in list_of_mmmyyyy 
-                constrained by series.
+                csv_targetdir (str)): Path of saved CSV.git a
     
     """
     # Throwing error in case the list of month-years is not 2
@@ -44,8 +43,11 @@ def employed_adults_csv(csv_targetdir, data_targetdir, list_of_mmmyyyy):
     
     # Merging datasets and filtering down to employed adults
     merged = pd.merge(df_list[0], df_list[1], on=['HH_ID'], how='inner')
-    adult_emp = merged[(merged.PERRP_x.isin([40,41])) & (merged.PRPERTYP_x == 2) & (merged.PREMPNOT_x.isin([1]))]
-    
+    adult_emp = merged[(merged.PERRP_x.isin([40,41])) 
+                       & (merged.PRPERTYP_x == 2) 
+                       & (merged.PERRP_y.isin([40,41])) 
+                       & (merged.PREMPNOT_x.isin([1]))]
+    adult_emp = adult_emp.drop_duplicates(subset='HH_ID', keep='first')
     adult_emp.to_csv(csv_targetdir)
     
     return csv_targetdir
