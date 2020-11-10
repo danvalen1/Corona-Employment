@@ -28,19 +28,6 @@ def catch_up(directory):
     # load in df
     df = pd.read_csv(directory, index_col=0)
     
-    # create target variable
-    target = df.PREMPNOT_y.apply(job_loss_categorization)
-                                        
-    # append target to df
-    df['target'] = target
-    
-    # drop future data
-    to_drop = [column for column in df.columns if "_y" in column]
-    df = df.drop(columns=to_drop)
-    
-    # remove _x from columns
-    df.columns = [column.split("_")[0] for column in df.columns]
-    
     # feature list
     feature_list = [
     'HEHOUSUT', # type of housing unit to dummy 
@@ -72,15 +59,35 @@ def catch_up(directory):
     "PECERT1", # Do you have a professional certification issued at state or federal level.
     "PRMJIND1", # industry cat
     "PRMJOCC1", # occupation cat
-    'target'
+    'target',
+    'HH_ID',
+    'IND_ID_FINAL'
     ]
+    
+    # subset the data frame with our desired columns
+    df = df[feature_list]
+    
+    # create target variable
+    target = df.PREMPNOT_y.apply(job_loss_categorization)
+                                        
+    # append target to df
+    df['target'] = target
+    
+    # drop future data
+    to_drop = [column for column in df.columns if "_y" in column]
+    df = df.drop(columns=to_drop)
+    
+    # remove _x from columns
+    df.columns = [column.split("_")[0] for column in df.columns]
+    
+    
     
     # dummy var list for transformation
     list_of_dummyvars = [
         'PRCITSHP',
         'PEHRRSN2',
         'PRMJIND1',
-        'PRMJOCC1
+        'PRMJOCC1', ## TIM ADDS HIS DUMMIES
 
     ]
     
@@ -90,8 +97,6 @@ def catch_up(directory):
     # Dummying variables
     df = feature_dummies(df, list_of_dummyvars)
     
-    # subset the data frame with our desired columns
-    df = df[feature_list]
     
     return df
 
@@ -182,7 +187,7 @@ def feature_dummies(df, list_of_dummyvars):
     
     # get dummies and drop first for reference category
     df_dummies = pd.get_dummies(df, columns=list_of_dummyvars, prefix=list_of_dummyvars, drop_first=True)
-
+    
     return df_dummies
 
 def job_loss_categorization(n):
