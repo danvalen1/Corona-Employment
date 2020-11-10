@@ -8,15 +8,49 @@ import waybackpy
 from datetime import datetime
 from dateutil.parser import parse
 import urllib
+from modules import cleaning as c
 
 # Global Variables
 archive_age_limit = 30
 
 user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.111 Safari/537.36'
 
-feature_list = []
+def employed_adults_csv(csv_targetdir, data_targetdir, list_of_mmmyyyy):
+    """Creates a CSV of employed adults that are present in 2 months of data.
+            Parameters:
+                cstargetdir (str): String indicating where data should be saved.
+                list_of_mmmyyyy (list of str): List of month-years of data 
+                to be retrieved (e.g., sep2020)
+                series (list of str): List of variables of interest
+        
+            Returns:
+                df (pandas data frame): Dataframe of all data listed in list_of_mmmyyyy 
+                constrained by series.
+    
+    """
+    # Throwing error in case the list of month-years is not 2
+    if len(list_of_mmmyyyy) != 2:
+        raise ValueError("List of month-years must only contains 2 elements.") 
+     
+    # Renaming csv_targetdir
+    csv_targetdir = csv_targetdir + f'employed_adults_{list_of_mmmyyyy[0]}_{list_of_mmmyyyy[1]}.csv'
+    
+    # instantiating list of dfs and populating
+    df_list = []
+    for i in list_of_mmmyyyy:
+        df = CPS_raw(data_targetdir, [i], None)
+        df = c.clean_CPS_df(df)
+        df_list.append(df)
+    
+    # Merging datasets and filtering down to employed adults
+    merged = pd.merge(df_list[0], df_list[1], on=['HH_ID'], how='inner')
+    adult_emp = merged[(merged.PERRP_x.isin([40,41])) & (merged.PRPERTYP_x == 2) & (merged.PREMPNOT_x.isin([1]))]
+    
+    adult_emp.to_csv(csv_targetdir)
+    
+    return csv_targetdir
 
-def CPS_raw(targetdir, list_of_mmmyyyy, series = feature_list):
+def CPS_raw(targetdir, list_of_mmmyyyy, series = None):
     """Retrieves monthly CPS data from 1998 onwards.
     
             Parameters:
