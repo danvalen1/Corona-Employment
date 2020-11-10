@@ -175,12 +175,15 @@ def tim_binning(df):
             return 1
         else:
             return 0
-    df["PENATVTY"] = df.PTDTRACE.apply(birth_cat)
+    df["PENATVTY"] = df.PENATVTY.apply(birth_cat)
     return df
 
-def feature_dummies(df, list_of_dummy_vars):
+def feature_dummies(df, list_of_dummyvars):
     
-    return df
+    # get dummies and drop first for reference category
+    df_dummies = pd.get_dummies(df, columns=list_of_dummyvars, prefix=list_of_dummyvars, drop_first=True)
+
+    return df_dummies
 
 def job_loss_categorization(n):
     if n > 1:
