@@ -14,10 +14,14 @@ def clean_CPS_df(df):
     
     return df
 
-def catch_up(directory):
+def catch_up(employed_adults_directory, covid_pol_directory):
     """
-    directory --> string, url of the the csv
+    adults_directory --> string, directory of employed_adults_apr2020_jul2020.csv
         - eg '../../src/csv/employed_adults_apr2020_jul2020.csv'
+        
+    covid_pol_directory --> string, directory of pol_covid.csv
+        - eg '../../src/csv/pol_covid.csv'
+    
     
     returns --> pandas.DataFrame containing features of intereast
     
@@ -26,7 +30,11 @@ def catch_up(directory):
     functions: job_loss_categorization
     """
     # load in df
-    df = pd.read_csv(directory, index_col=0)
+    try:
+        df = pd.read_csv(employed_adults_directory, index_col=0)
+    except Exception as e:
+        print(str(e))
+        print("Please enter the correct directory for employed_adults_apr2020_jul2020.csv")
     
     # feature list
     feature_list = [
@@ -87,7 +95,11 @@ def catch_up(directory):
         'PRCITSHP',
         'PEHRRSN2',
         'PRMJIND1',
-        'PRMJOCC1', ## TIM ADDS HIS DUMMIES
+        'PRMJOCC1',
+        "PESEX",
+        "PEEDUCA",
+        "PTDTRACE", 
+        "PEHSPNON",
 
     ]
     
@@ -97,6 +109,12 @@ def catch_up(directory):
     # Dummying variables
     df = feature_dummies(df, list_of_dummyvars)
     
+    # add political and covid geolocation data
+    try:
+        df = merge_on_fip(df, covid_pol_directory)
+    except Exception as e:
+        print(str(e))
+        print("Please add the correct directory for covid_pol.csv")
     
     return df
 
@@ -165,6 +183,7 @@ def tim_binning(df):
         else:
             return 0 # didn't finish highschool
     df["PEEDUCA"] = df.PEEDUCA.apply(education_cat)
+   
     # bin PTDTRACE aka race composition 
     def rcomp_cat(n):
         if n == 1:
@@ -195,3 +214,20 @@ def job_loss_categorization(n):
         return 1
     else:
         return 0
+    
+def merge_on_fip(df, directory):
+    """
+    df --> pandas.DataFrame
+    directoy --> string location of pol_covid.csv
+    
+    returns:
+    df --> merged df
+    
+    Takes in a df containing a fips column and merges another data frame
+    containing the political and and covid data
+    """
+    pol_fip_data = pd.read_csv(directory, index_col=0)
+    df = df.merge(pol_fip_data, left_on='GESTFIPS', right_on='fips' ,how='left')
+    df.drop(columns=['fips'], inplace=True)
+    
+    return df
