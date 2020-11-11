@@ -14,10 +14,14 @@ def clean_CPS_df(df):
     
     return df
 
-def catch_up(directory):
+def catch_up(employed_adults_directory, covid_pol_directory):
     """
-    directory --> string, url of the the csv
+    adults_directory --> string, directory of employed_adults_apr2020_jul2020.csv
         - eg '../../src/csv/employed_adults_apr2020_jul2020.csv'
+        
+    covid_pol_directory --> string, directory of pol_covid.csv
+        - eg '../../src/csv/pol_covid.csv'
+    
     
     returns --> pandas.DataFrame containing features of intereast
     
@@ -26,7 +30,27 @@ def catch_up(directory):
     functions: job_loss_categorization
     """
     # load in df
-    df = pd.read_csv(directory, index_col=0)
+    try:
+        df = pd.read_csv(employed_adults_directory, index_col=0)
+    except Exception as e:
+        print(str(e))
+        print("Please enter the correct directory for employed_adults_apr2020_jul2020.csv")
+    
+    # create target variable
+    target = df.PREMPNOT_y.apply(job_loss_categorization)
+                                        
+    # append target to df
+    df['target'] = target
+    
+    # drop future data
+    to_drop = [column for column in df.columns if "_y" in column]
+    df = df.drop(columns=to_drop)
+    
+    # remove _x from columns
+    df.columns = [column.split("_")[0] for column in df.columns]
+    
+    # add IND_ID_FINAL and HH_ID
+    df = clean_CPS_df(df)
     
     # feature list
     feature_list = [
@@ -34,7 +58,7 @@ def catch_up(directory):
     'HWHHWGT', # Household weight
     'GESTFIPS', # state codes
     "GTMETSTA", # Metropolitan or not 
-    'HEFAMINC', # total family income < - TIM
+    'HEFAMINC', # total family income 
     "HRNUMHOU", # total number of people living in the house hold
     'HRHTYPE', # household type eg civilian or married etc
     'PRTAGE', # person's age
@@ -67,36 +91,32 @@ def catch_up(directory):
     # subset the data frame with our desired columns
     df = df[feature_list]
     
-    # create target variable
-    target = df.PREMPNOT_y.apply(job_loss_categorization)
-                                        
-    # append target to df
-    df['target'] = target
-    
-    # drop future data
-    to_drop = [column for column in df.columns if "_y" in column]
-    df = df.drop(columns=to_drop)
-    
-    # remove _x from columns
-    df.columns = [column.split("_")[0] for column in df.columns]
-    
-    
-    
+      
     # dummy var list for transformation
     list_of_dummyvars = [
         'PRCITSHP',
         'PEHRRSN2',
         'PRMJIND1',
-        'PRMJOCC1', ## TIM ADDS HIS DUMMIES
+        'PRMJOCC1',
+        "PESEX",
+        "PEEDUCA",
+        "PTDTRACE", 
+        "PEHSPNON",
 
     ]
     
     # Binning/transforming variables
-    df = feature_changes(df)
+    df = feature_transformations(df)
     
     # Dummying variables
     df = feature_dummies(df, list_of_dummyvars)
     
+    # add political and covid geolocation data
+    try:
+        df = merge_on_fip(df, covid_pol_directory)
+    except Exception as e:
+        print(str(e))
+        print("Please add the correct directory for covid_pol.csv")
     
     return df
 
@@ -120,7 +140,7 @@ def feature_transformations(df):
     # How many jobs do you have?
     # Transforming -1 to 1 since our universe has employed people in it, also dropping PEMJO since irrelevant
     df['PEMJNUM'] = [1 if x == -1 else x for x in df['PEMJNUM']]
-    df.drop(labels = 'PEMJOT', inplace = True)
+#     df.drop(labels = 'PEMJOT', inplace = True) # CHANGED HERE
     
     # Do you work 35 hours or more?
     # Tranforming 'No' and "hours vary" to 0
@@ -137,14 +157,14 @@ def feature_transformations(df):
     return df
 
 def tim_binning(df):
-    # Bin HEHOUSUT aka housing type
+    # Bin HEHOUSUT aka housing type, 1 is flat, apartment or house, 0 is other
     def housing_cat(n):
         if n == 1:
             return 1
         elif n != 1:
             return 0
     df["HEHOUSUT"] = df.HEHOUSUT.apply(housing_cat)
-    # bin GTMETSTA aka metro or not
+    # bin GTMETSTA aka metro or not. 1 = metro, 0 = non-metro
     def metro_cat(n):
         if n == 1 or n==3: # three had most similar characteristics to 1
             return 1
@@ -165,6 +185,7 @@ def tim_binning(df):
         else:
             return 0 # didn't finish highschool
     df["PEEDUCA"] = df.PEEDUCA.apply(education_cat)
+   
     # bin PTDTRACE aka race composition 
     def rcomp_cat(n):
         if n == 1:
@@ -195,3 +216,20 @@ def job_loss_categorization(n):
         return 1
     else:
         return 0
+    
+def merge_on_fip(df, directory):
+    """
+    df --> pandas.DataFrame
+    directory --> string location of pol_covid.csv
+    
+    returns:
+    df --> merged df
+    
+    Takes in a df containing a fips column and merges another data frame
+    containing the political and and covid data
+    """
+    pol_fip_data = pd.read_csv(directory, index_col=0)
+    df = df.merge(pol_fip_data, left_on='GESTFIPS', right_on='fips' ,how='left')
+    df.drop(columns=['fips'], inplace=True)
+    
+    return df
