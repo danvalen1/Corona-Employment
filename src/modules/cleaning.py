@@ -36,13 +36,29 @@ def catch_up(employed_adults_directory, covid_pol_directory):
         print(str(e))
         print("Please enter the correct directory for employed_adults_apr2020_jul2020.csv")
     
+    # create target variable
+    target = df.PREMPNOT_y.apply(job_loss_categorization)
+                                        
+    # append target to df
+    df['target'] = target
+    
+    # drop future data
+    to_drop = [column for column in df.columns if "_y" in column]
+    df = df.drop(columns=to_drop)
+    
+    # remove _x from columns
+    df.columns = [column.split("_")[0] for column in df.columns]
+    
+    # add IND_ID_FINAL and HH_ID
+    df = clean_CPS_df(df)
+    
     # feature list
     feature_list = [
     'HEHOUSUT', # type of housing unit to dummy 
     'HWHHWGT', # Household weight
     'GESTFIPS', # state codes
     "GTMETSTA", # Metropolitan or not 
-    'HEFAMINC', # total family income < - TIM
+    'HEFAMINC', # total family income 
     "HRNUMHOU", # total number of people living in the house hold
     'HRHTYPE', # household type eg civilian or married etc
     'PRTAGE', # person's age
@@ -75,21 +91,7 @@ def catch_up(employed_adults_directory, covid_pol_directory):
     # subset the data frame with our desired columns
     df = df[feature_list]
     
-    # create target variable
-    target = df.PREMPNOT_y.apply(job_loss_categorization)
-                                        
-    # append target to df
-    df['target'] = target
-    
-    # drop future data
-    to_drop = [column for column in df.columns if "_y" in column]
-    df = df.drop(columns=to_drop)
-    
-    # remove _x from columns
-    df.columns = [column.split("_")[0] for column in df.columns]
-    
-    
-    
+   
     # dummy var list for transformation
     list_of_dummyvars = [
         'PRCITSHP',
@@ -104,7 +106,7 @@ def catch_up(employed_adults_directory, covid_pol_directory):
     ]
     
     # Binning/transforming variables
-    df = feature_changes(df)
+    df = feature_transformations(df)
     
     # Dummying variables
     df = feature_dummies(df, list_of_dummyvars)
@@ -138,7 +140,7 @@ def feature_transformations(df):
     # How many jobs do you have?
     # Transforming -1 to 1 since our universe has employed people in it, also dropping PEMJO since irrelevant
     df['PEMJNUM'] = [1 if x == -1 else x for x in df['PEMJNUM']]
-    df.drop(labels = 'PEMJOT', inplace = True)
+#     df.drop(labels = 'PEMJOT', inplace = True) # CHANGED HERE
     
     # Do you work 35 hours or more?
     # Tranforming 'No' and "hours vary" to 0
@@ -155,14 +157,14 @@ def feature_transformations(df):
     return df
 
 def tim_binning(df):
-    # Bin HEHOUSUT aka housing type
+    # Bin HEHOUSUT aka housing type, 1 is flat, apartment or house, 0 is other
     def housing_cat(n):
         if n == 1:
             return 1
         elif n != 1:
             return 0
     df["HEHOUSUT"] = df.HEHOUSUT.apply(housing_cat)
-    # bin GTMETSTA aka metro or not
+    # bin GTMETSTA aka metro or not. 1 = metro, 0 = non-metro
     def metro_cat(n):
         if n == 1 or n==3: # three had most similar characteristics to 1
             return 1
@@ -218,7 +220,7 @@ def job_loss_categorization(n):
 def merge_on_fip(df, directory):
     """
     df --> pandas.DataFrame
-    directoy --> string location of pol_covid.csv
+    directory --> string location of pol_covid.csv
     
     returns:
     df --> merged df
