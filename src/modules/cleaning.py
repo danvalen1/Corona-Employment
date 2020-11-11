@@ -91,7 +91,7 @@ def catch_up(employed_adults_directory, covid_pol_directory):
     # subset the data frame with our desired columns
     df = df[feature_list]
     
-   
+      
     # dummy var list for transformation
     list_of_dummyvars = [
         'PRCITSHP',
