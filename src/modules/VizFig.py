@@ -127,3 +127,24 @@ def month_label(var):
         var= ''
     return var
         
+def covid_plot():
+    to_plot =pd.read_csv('./src/csv/job_loss_covid.csv')
+    fig, ax1 = plt.subplots(figsize=(12,6))
+    
+    # configure axis 1
+    ax1.set_ylabel('Job Loss', size = 15)
+    ax1.set_xticklabels(labels = to_plot.NAME, size=14)
+    ax1.set_xlabel('State', size = 15)
+    ax1.set_label("Population")
+    
+    sns.barplot(data = to_plot, x='NAME', y='Job Loss', alpha=0.9, ax=ax1, color='royalblue')
+
+    # configure axis 2
+    ax2 = ax1.twinx()
+    sns.barplot(data = to_plot, x='NAME', y='Population', alpha=0.6, ax=ax2, color='slategrey')
+    ax2.set_ylabel('Population', size = 15)
+    ax2.set_label("Population")
+    
+    # Set label
+    ax1.set_title("Population VS Job Loss in US states" , size = 20)
+    
