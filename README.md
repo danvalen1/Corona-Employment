@@ -1,6 +1,5 @@
 # Factors in Unemployment During Coronavirus Pandemic
 
-
 **Authors**: [Tim Hintz](mailto:tjhintz@gmail.com), [Dan Valenzuela](mailto:danvalen1@gmail.com)
 
 ![img](./images/employment.jpg)
@@ -27,10 +26,9 @@ Data was cleaned and processed using the function outlined in `src/modules/clean
 
 ## Methodology
 
-Due to the nature of our business problem, we opted for Logisic Regression and focussed on recall/sensitivity. We wanted to know the relaive importance of features as well as the sign. Since a false negativie would mean ignoring someone who lost their job we optimisied for recall.
->>>>>>> 898139f92cf86a54279092d4f45afc80c3f20429
+Due to the nature of our business problem, we opted for Logisic Regression and focused on recall/sensitivity. We wanted to know the relative importance of features as well as the sign. Since a false negativie would mean ignoring someone who lost their job we optimized for recall.
 
-To handle the 14:1 class imbalance, we allowed scikit learn's Logisitc Regression to scale the classes by their inverse frequencies. 
+To handle the 14:1 class imbalance, we allowed Scikit-learn's Logisitc Regression to scale the classes by their inverse frequencies. 
 
 To aid in interpretability, we used a standard scalar on our data set to convert all of the features into Z scores. 
 
@@ -47,7 +45,7 @@ The older you are, the more likely you are to be unemployed and those people who
 
 ## Conclusion
 
-We reccomend monitoring closely communities based on the metrics described in our research in order to quickly allocate funds and support where it is likely to be needed most.
+We recommend monitoring closely communities based on the metrics described in our research in order to quickly allocate funds and support where it is likely to be needed most.
 
 ## Repository Structure
 
