@@ -29,7 +29,7 @@ Data was cleaned and processed using the function outlined in `src/modules/clean
 
 ## Methodology
 
-Due to the nature of our business problem, we opted for Logisic Regression and focussed on recall/sensitivity. We wanted to know the relaive importance of features as well as the sign. Since we a false negativie would mean ignoring someone who lost their job we optimisied for recall.
+Due to the nature of our business problem, we opted for Logisic Regression and focussed on recall/sensitivity. We wanted to know the relaive importance of features as well as the sign. Since a false negativie would mean ignoring someone who lost their job we optimisied for recall.
 
 To handle the 14:1 class imbalance, we allowed scikit learn's Logisitc Regression to scale the classes by their inverse frequencies. 
 
