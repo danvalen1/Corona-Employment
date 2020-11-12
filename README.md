@@ -52,7 +52,7 @@ We recommend monitoring closely communities based on the metrics described in ou
 ```
 ├── README.md                           <- The top-level README for reviewers of this project
 ├── Project_Walkthrough.ipynb           <- Narrative documentation of analysis in Jupyter notebook
-├── Phase3-Proj_Presentation.pdf <- PDF version of project presentation
+├── Factors in Unemployment.pdf         <- PDF version of project presentation
 ├── src                                 <- Contains images, data, and modules
 │   ├── images                          <- Images created and downloaded
 │   ├── data                            <- Source data used
