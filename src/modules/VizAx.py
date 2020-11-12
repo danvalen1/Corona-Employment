@@ -8,7 +8,7 @@ from modules import VizFig
 labels_dict = VizFig.labels_dict
 figsize = (5, 4)
 dpi = (300)
-fontscale = .6
+fontscale = 1.2
 sns.set(font_scale = fontscale, style = 'whitegrid')
 
 def PlotScatter(df, xvar, yvar, targetdir, hue=None):
@@ -92,3 +92,14 @@ def CorrHeatmap(df, targetdir):
     sns.heatmap(df.corr(), cmap='bwr', center=0, annot=True)
     fig.savefig(f'{targetdir}CorrHeatmap.png', bbox_inches='tight')
     return fig.show()
+
+def PlotCMatrix(cmatrix):
+    fig, ax = plt.subplots(figsize = figsize)
+    sns.heatmap(cmatrix, annot=True, fmt='g', ax=ax, cmap='Blues')
+    ax.set_xticklabels(['Employed', 'Unemployed'])
+    ax.set_yticklabels(['Employed', 'Unemployed'])
+    ax.set_ylabel('Actual')
+    ax.set_xlabel('Predicted')
+
+    ax.set_title('Confusion Matrix Using L1 regularized Logistic Regression')
+    return plt.show()

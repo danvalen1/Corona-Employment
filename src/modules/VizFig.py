@@ -17,6 +17,7 @@ markersize = 75
 labels_dict = {'PESEX_x': 'Sex',
                'PREMPNOT_y': 'Employment Status',
                'PRTAGE_x': 'Age',
+               'PRTAGE': 'Age',
                'target': 'Employment Status',
                'PEHRACTT': 'Hours Worked in a Week',
                'Features': 'Features',
@@ -82,15 +83,15 @@ def PlotCat(df, xvar, targetdir, yvar=None, kind='count', hue=None, palette="coo
     """
     m_label = month_label(xvar)
     
-    if yvar:
+    if yvar == 'PRTAGE':
+        y_label = 'Distribution of Age'
+    elif yvar and labels_dict[yvar]:
         y_label = labels_dict[yvar] + ' in April 2020'
     else:
-        y_label = 'Frequency'
+        y_label = 'Distribution'
         
     
     title = f'{y_label} vs. \n{labels_dict[xvar]} Categories{m_label}'
-    
-
     
     
     fig = sns.catplot(data=df,
@@ -106,7 +107,9 @@ def PlotCat(df, xvar, targetdir, yvar=None, kind='count', hue=None, palette="coo
     plt.ylabel(y_label, size = fontsize)
     plt.title(title, size=fontsize)
     labels = ticks_dict[xvar]
-    plt.xticks(list(range(len(labels))), labels, size=fontsize)
+    plt.yticks(size=fontsize)
+    if labels:
+        plt.xticks(list(range(len(labels))), labels, size=fontsize)
     if 'PREMPNOT' in xvar:
         plt.xticks(rotation=-30)
     
