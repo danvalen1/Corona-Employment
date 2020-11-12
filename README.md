@@ -13,17 +13,42 @@ In late 2019, the world was hit by the Sars-Covid-2. To prevent the spread of th
 
 ## Business Problem
 
-Being able to predict which families and individuals are going to be in most dire need of financial assistence three months in advance will aid in providing the government with the necessary information for the distribution of relief funds. 
+In order to allocate resources effectively, we need to understand which features are most important in determining unemployment during a time of financial crisis. Once we understand which features are important, we can primarily monitor areas with the highest probability of showing employment loss, saving time and money. 
+
 
 ## Data
 
-All data used in this study comes from the `Current Population Survey` (CPS) conducted by `The United States Census Bureau`. The CPS tracks upwards of 60,000 households accross the US using multistaged stratified statistical sampling. Each house hold is followed for four months at a time.
+The demographic data used in this study comes from the `Current Population Survey` (CPS) conducted by `The United States Census Bureau`. The CPS tracks upwards of 60,000 households accross the US using multistaged stratified statistical sampling. Each house hold is followed for four months at a time. We therefore subsetted the survey for heads of household that were employed in april but had lost their jobs by July.
 
-The census data had high integrity and was clean at time of retrieval. 
+In addition, we collected data from:
+- Covid data from [New York Times](https://github.com/nytimes/covid-19-data)
+- Cartographic data from [Census Bureau Cartographic Data](https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html)
+- Population data from [Census Bureau Population Data](https://www.census.gov/data/tables/time-series/demo/popest/2010s-state-total.html#par_textimage)
+
+Data was cleaned and processed using the function outlined in `src/modules/cleaning.py` as well as in `notebooks/tjh/EDA.ipynb`
 
 ## Methodology
 
+Due to the nature of our business problem, we opted for Logisic Regression and focussed on recall/sensitivity. We wanted to know the relaive importance of features as well as the sign. Since we a false negativie would mean ignoring someone who lost their job we optimisied for recall.
+
+To handle the 14:1 class imbalance, we allowed scikit learn's Logisitc Regression to scale the classes by their inverse frequencies. 
+
+To aid in interpretability, we used a standard scalar on our data set to convert all of the features into Z scores. 
+
+Finally, we used l1 regularization as built in feature selection so that we only looked at our most impactful features.
+
+We looked at the top 10 most impactful features, 5 with a negative sign and 5 with a positive sign and graphed the results.
+
 ## Results
+
+The older you are, the more likely you are to be unemployed and those people who have jobs that demand long working hours are the most likely to keep their jobs. Interestingly, those people who had two or more jobs were more likely to not be employed after the pandemic hit indicating that hours worked alone is not the whole picture.
+
+![img](./src/images/Coeffs.png)
+
+
+## Conclusion
+
+We reccomend monitoring closely communities based on the metrics described in our research in order to quickly allocate funds and support where it is likely to be needed most.
 
 ## Repository Structure
 
