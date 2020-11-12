@@ -64,7 +64,7 @@ def PlotCat(df, xvar, targetdir, yvar=None, kind='count', hue=None, palette="coo
         plt.xticks(rotation=-25)
     
     
-    if 'PEHRACTT' in yvar:
+    if yvar and 'PEHRACTT' in yvar:
         plt.ylim((0, 140))
     fig.savefig(f'{targetdir}{title}.png', bbox_inches='tight')
 
