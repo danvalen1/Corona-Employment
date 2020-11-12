@@ -13,12 +13,12 @@ In late 2019, the world was hit by the Sars-Covid-2. To prevent the spread of th
 
 ## Business Problem
 
-In order to allocate resources effectively, we need to understand which features are most important in determining unemployment during a time of financial crisis. Once we understand which features are important, we can monitor primarily areas with the highest probability of showing employment loss, saving time and money. 
+In order to allocate resources effectively, we need to understand which features are most important in determining unemployment during a time of financial crisis. Once we understand which features are important, we can primarily monitor areas with the highest probability of showing employment loss, saving time and money. 
 
 
 ## Data
 
-The demographic data used in this study comes from the `Current Population Survey` (CPS) conducted by `The United States Census Bureau`. The CPS tracks upwards of 60,000 households accross the US using multistaged stratified statistical sampling. Each house hold is followed for four months at a time.
+The demographic data used in this study comes from the `Current Population Survey` (CPS) conducted by `The United States Census Bureau`. The CPS tracks upwards of 60,000 households accross the US using multistaged stratified statistical sampling. Each house hold is followed for four months at a time. We therefore subsetted the survey for heads of household that were employed in april but had lost their jobs by July.
 
 In addition, we collected data from:
 - Covid data from [New York Times](https://github.com/nytimes/covid-19-data)
@@ -29,7 +29,7 @@ Data was cleaned and processed using the function outlined in `src/modules/clean
 
 ## Methodology
 
-Due to the nature of our business problem, we opted for Logisic Regression and focussed on recall/sensitivity. We wanted to know the relaive importance of features as well as the sign. Since we are a false negativie would mean ignoring someone who lost their job we optimisied for recall.
+Due to the nature of our business problem, we opted for Logisic Regression and focussed on recall/sensitivity. We wanted to know the relaive importance of features as well as the sign. Since we a false negativie would mean ignoring someone who lost their job we optimisied for recall.
 
 To handle the 14:1 class imbalance, we allowed scikit learn's Logisitc Regression to scale the classes by their inverse frequencies. 
 
@@ -41,7 +41,7 @@ We looked at the top 10 most impactful features, 5 with a negative sign and 5 wi
 
 ## Results
 
-The older you are, the more likely you are to be unemployed and those people who have jobs that demand long working hours are the most likely to keep their jobs. Interestingly, those people who had 2 or more jobs were more likely to not be in the work force after the pandemic hit indicating that hours worked alone is not the whole picture.
+The older you are, the more likely you are to be unemployed and those people who have jobs that demand long working hours are the most likely to keep their jobs. Interestingly, those people who had two or more jobs were more likely to not be employed after the pandemic hit indicating that hours worked alone is not the whole picture.
 
 ![img](./src/images/Coeffs.png)
 
