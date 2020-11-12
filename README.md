@@ -1,6 +1,4 @@
-# Phase3-Proj
-
-### Using Census data to Predict Unemployment Rates
+# Factors in Unemployment During Coronavirus Pandemic
 
 
 **Authors**: [Tim Hintz](mailto:tjhintz@gmail.com), [Dan Valenzuela](mailto:danvalen1@gmail.com)
@@ -18,7 +16,7 @@ In order to allocate resources effectively, we need to understand which features
 
 ## Data
 
-The demographic data used in this study comes from the `Current Population Survey` (CPS) conducted by `The United States Census Bureau`. The CPS tracks upwards of 60,000 households accross the US using multistaged stratified statistical sampling. Each house hold is followed for four months at a time. We therefore subsetted the survey for heads of household that were employed in april but had lost their jobs by July.
+The demographic data used in this study comes from the `Current Population Survey` (CPS) conducted by `The United States Census Bureau`. The CPS tracks upwards of 60,000 households accross the US using multistaged stratified statistical sampling. Each house hold is followed for four months at a time. We therefore subsetted the survey for heads of household that were employed in April 2020 but had lost their jobs by July 2020.
 
 In addition, we collected data from:
 - Covid data from [New York Times](https://github.com/nytimes/covid-19-data)
@@ -29,7 +27,7 @@ Data was cleaned and processed using the function outlined in `src/modules/clean
 
 ## Methodology
 
-Due to the nature of our business problem, we opted for Logisic Regression and focussed on recall/sensitivity. We wanted to know the relaive importance of features as well as the sign. Since we a false negativie would mean ignoring someone who lost their job we optimisied for recall.
+Due to the nature of our business problem, we opted for Logisic Regression and focussed on recall/sensitivity. We wanted to know the relaive importance of features as well as the sign. Since we a false negative would mean ignoring someone who lost their job we optimisied for recall.
 
 To handle the 14:1 class imbalance, we allowed scikit learn's Logisitc Regression to scale the classes by their inverse frequencies. 
 
@@ -60,7 +58,8 @@ We reccomend monitoring closely communities based on the metrics described in ou
 │   ├── images                          <- Images created and downloaded
 │   ├── data                            <- Source data used
 │   └── modules                         <- .py files
-├── images                              <- Both sourced externally and generated from code
+├── images                              <- Both sourced externally and generated from 
+│                                          code
 ├── notebooks                           <- Noteboooks used to build Walkthrough
 └── data                                <- Data obtained from the Census Bureau
 ```

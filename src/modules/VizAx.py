@@ -84,3 +84,11 @@ def PlotHist(df, xvar, targetdir, bins):
     fig.savefig(f'{targetdir}{title}.png', bbox_inches='tight')
     
     return plt.show()
+
+def CorrHeatmap(df, targetdir):
+    """Generates a correlation heatmap from a dataframe with variables of interest.
+    """
+    fig, ax = plt.subplots(figsize=(40,32), dpi=300)
+    sns.heatmap(df.corr(), cmap='bwr', center=0, annot=True)
+    fig.savefig(f'{targetdir}CorrHeatmap.png', bbox_inches='tight')
+    return fig.show()
