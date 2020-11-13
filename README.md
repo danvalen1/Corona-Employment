@@ -24,6 +24,7 @@ In addition, we collected data from:
 
 Data was cleaned and processed using the function outlined in `src/modules/cleaning.py` as well as in `notebooks/tjh/EDA.ipynb`
 
+We subsetted the data set to only heads of house hold who were employed as of April 2020 which ended up being `~3900 people`. For each of the 3900 indivudals `~70 features` were examined for their relative importance in determining job loss.
 ## Methodology
 
 Due to the nature of our business problem, we opted for Logisic Regression and focused on recall/sensitivity. We wanted to know the relative importance of features as well as the sign. Since a false negativie would mean ignoring someone who lost their job we optimized for recall.
